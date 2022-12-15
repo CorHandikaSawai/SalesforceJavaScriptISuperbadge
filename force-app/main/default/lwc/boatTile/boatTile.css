@@ -6,12 +6,12 @@
     background-size: cover;
     border-radius: 5px;
   }
-  .selected {
+.selected {
     border: 3px solid rgb(0, 95, 178);
     border-radius: 5px;
-  }
-  .tile-wrapper {
+}
+.tile-wrapper {
     cursor: pointer;
     padding: 5px;
-  }
+}
   

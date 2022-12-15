@@ -7,16 +7,20 @@
                     <lightning-button label="New Boat" onclick={createNewBoat}></lightning-button>
                 </slot>
                 <p class="slds-var-p-horizontal_small">
-                    <c-boat-search-form></c-boat-search-form>
+                    <c-boat-search-form onsearch={searchBoats}></c-boat-search-form>
                 </p>
             </lightning-card>
         </lightning-layout-item>
         <!-- Bottom -->
         <lightning-layout-item size="12" class="slds-p-top_small slds-is-relative">
-            Spinner and Results here
             <!-- Spinner goes here -->
+            <!-- <lightning-spinner></lightning-spinner> -->
+
             <!-- boatSearchResults goes here -->
+            <c-boat-search-results></c-boat-search-results>
+
             <!-- onloading={handleLoading} ondoneloading={handleDoneLoading} -->
+
         </lightning-layout-item>
     </lightning-layout>
 </template>

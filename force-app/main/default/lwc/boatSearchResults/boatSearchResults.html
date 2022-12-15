@@ -1,17 +1,17 @@
-<template>
-    <lightning-tabset >
+<template >
+    <lightning-tabset if:true={boats}>
         <lightning-tab label="Gallery">
             <div class="slds-scrollable_y">
                 <!-- layout horizontally aligned to the center  -->
                 <!-- layout allowing multiple rows -->
-                <lightning-layout>
+                <lightning-layout multiple-rows>
                     <!-- template looping through each boat -->
-                    <!-- <template > -->
+                    <template for:each={boats.data} for:item="boat">
                         <!-- lightning-layout-item for each boat -->
-                        <lightning-layout-item >
-                            <!-- Each BoatTile goes here -->
+                        <lightning-layout-item key={boat.Id} padding="around-small" size="12" small-device-size="6" medium-device-size="4" large-device-size="3">
+                            <c-boat-tile boat={boat}></c-boat-tile>
                         </lightning-layout-item>
-                    <!-- </template> -->
+                    </template>
                 </lightning-layout>
             </div>
         </lightning-tab>
