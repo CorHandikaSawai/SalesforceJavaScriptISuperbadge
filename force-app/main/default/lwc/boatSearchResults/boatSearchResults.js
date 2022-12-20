@@ -1,4 +1,4 @@
-import { LightningElement, api, wire } from 'lwc';
+import { LightningElement, api, wire, track } from 'lwc';
 import { publish, MessageContext } from 'lightning/messageService';
 import getBoats from '@salesforce/apex/BoatDataService.getBoats';
 import updateBoatList from '@salesforce/apex/BoatDataService.updateBoatList';
@@ -13,7 +13,7 @@ const ERROR_TITLE   = 'Error';
 const ERROR_VARIANT = 'error';
 
 export default class BoatSearchResults extends LightningElement {
-  selectedBoatId;
+  @track selectedBoatId;
   columns = [];
   boatTypeId = '';
   boats;
@@ -41,20 +41,23 @@ export default class BoatSearchResults extends LightningElement {
   // uses notifyLoading
   @api
   searchBoats(boatTypeId) {
-    this.notifyLoading(this.isLoading);
+    this.notifyLoading(true);
     this.boatTypeId = boatTypeId;
+    this.notifyLoading(false);
   }
   
   // this public function must refresh the boats asynchronously
   // uses notifyLoading
-  refresh() {
-    this.isLoading()
-    refreshApex();
+  async refresh() {
+    this.notifyLoading(true);
+    await refreshApex(this.boats);
+    this.notifyLoading(false);
   }
   
   // this function must update selectedBoatId and call sendMessageService
   updateSelectedTile(event) {
-    this.selectedBoatId = event.detail;
+    console.log(event.detail.boatId),
+    this.selectedBoatId = event.detail.boatId;
     this.sendMessageService(this.selectedBoatId);
   }
   
@@ -71,6 +74,7 @@ export default class BoatSearchResults extends LightningElement {
   // clear lightning-datatable draft values
   handleSave(event) {
     // notify loading
+    this.notifyLoading(true);
     const updatedFields = event.detail.draftValues;
     // Update the records via Apex
     updateBoatList({data: updatedFields})
@@ -89,9 +93,18 @@ export default class BoatSearchResults extends LightningElement {
         variant: ERROR_VARIANT,
       }));
     })
-    .finally(() => {});
+    .finally(() => {
+      this.notifyLoading(false)
+    });
   }
   // Check the current value of isLoading before dispatching the doneloading or loading custom event
   notifyLoading(isLoading) {
+    this.isLoading = isLoading;
+    if(this.isLoading){
+      this.dispatchEvent(new CustomEvent('loading'));
+    }
+    else{
+      this.dispatchEvent(new CustomEvent('doneloading'));
+    }
   }
 }
